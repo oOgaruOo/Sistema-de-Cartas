@@ -1,0 +1,129 @@
+/* ============================================================
+   sobre.css · sobre, solapa y sello de cera
+   ============================================================ */
+.env-hint{
+  margin-top:6px; font-size:13px; color:var(--ink-soft);
+  letter-spacing:.14em; text-transform:uppercase;
+  animation:hintPulse 3.2s ease-in-out infinite;
+}
+.env-hint em{ font-style:italic; text-transform:none; letter-spacing:0; font-size:15px; color:var(--crimson); }
+
+.env-stage{
+  position:relative; margin:44px 0 46px;
+  perspective:1100px;
+  transition:opacity .75s ease, transform .75s ease, filter .75s ease;
+}
+.env-stage.away{ opacity:0; transform:translateY(80px) scale(.94); filter:blur(4px); }
+.env-parallax{ transform-style:preserve-3d; }
+.env-float{ animation:floatY 5.2s ease-in-out infinite; }
+
+.envelope{
+  position:relative; width:min(360px,84vw); aspect-ratio:3/2;
+  perspective:700px;
+}
+.env-back{
+  position:absolute; inset:0; z-index:1; background:var(--kraft);
+  border:1px solid rgba(120,95,60,.4); border-radius:3px;
+}
+.letter-mini{
+  position:absolute; top:4%; bottom:4%; left:5%; right:5%; z-index:2;
+  background:var(--paper-light); border-radius:2px;
+  padding:16px 18px 0;
+  box-shadow:0 -4px 14px -6px rgba(70,45,20,.25);
+  transition:transform 1s cubic-bezier(.2,.65,.25,1) .1s;
+}
+.letter-mini.risen{ transform:translateY(-56%); }
+.mini-heart{ width:20px; height:18px; margin:0 auto 10px; display:block; }
+.mini-heart path{ fill:var(--crimson); }
+.mini-line{ height:2px; border-radius:2px; background:rgba(55,40,28,.16); margin-top:11px; }
+.mini-line:nth-child(2){ width:74%; }
+.mini-line:nth-child(3){ width:90%; }
+.mini-line:nth-child(4){ width:64%; }
+.mini-line:nth-child(5){ width:82%; }
+.mini-line:nth-child(6){ width:56%; }
+
+.env-pocket{
+  position:absolute; inset:0; z-index:3;
+  background:var(--kraft);
+  clip-path:polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+  border-radius:3px;
+}
+.pocket-lines{ position:absolute; inset:0; width:100%; height:100%; }
+.env-name{
+  position:absolute; top:57%; left:5%; right:5%;
+  text-align:center;
+  font-family:'Caveat',cursive; font-weight:600;
+  font-size:clamp(19px,5vw,24px); color:var(--ink);
+  overflow-wrap:break-word;
+}
+
+.flap{
+  position:absolute; top:0; left:0; width:100%; height:55%; z-index:4;
+  transform-style:preserve-3d; transform-origin:50% 0;
+  transition:transform 1.05s cubic-bezier(.55,-.12,.3,1.04);
+  filter:drop-shadow(0 2px 3px rgba(80,50,25,.28));
+}
+.flap.open{ transform:rotateX(180deg); }
+.flap-face{ position:absolute; inset:0; backface-visibility:hidden; clip-path:polygon(0 0,100% 0,50% 100%); }
+.flap-front{ background:var(--kraft-deep); }
+.flap-back{ background:#7e1d15; transform:rotateX(180deg); }
+
+.env-shadow{
+  position:absolute; left:50%; bottom:-36px; width:60%; height:22px;
+  transform:translateX(-50%);
+  background:rgba(64,44,24,.3); border-radius:50%; filter:blur(10px);
+  animation:shadowPulse 5.2s ease-in-out infinite;
+}
+
+/* --- Sello de cera --- */
+.seal-pos{
+  position:absolute; left:50%; top:52%; z-index:5;
+  transform:translate(-50%,-50%);
+}
+.wax-seal{
+  width:78px; height:78px; padding:0; border:none; cursor:pointer;
+  background:radial-gradient(circle at 34% 30%, #c1544c 0%, #a03028 42%, #7c1d16 78%, #6b1710 100%);
+  border-radius:47% 53% 50% 50% / 52% 48% 55% 45%;
+  box-shadow:inset 0 3px 5px rgba(255,235,220,.28), inset 0 -5px 9px rgba(46,8,4,.5),
+             0 10px 18px -6px rgba(70,25,12,.55);
+  animation:heartbeat 2.8s ease-in-out infinite;
+  transition:filter .3s ease;
+}
+.wax-seal:hover{ filter:brightness(1.08); }
+.wax-seal::after{
+  content:''; position:absolute; inset:7px; border-radius:inherit;
+  border:1.5px solid rgba(255,230,210,.16); pointer-events:none;
+}
+.seal-heart{ position:absolute; inset:16px; }
+.seal-heart path{
+  fill:none; stroke:#f2e4d3; stroke-width:3.2; stroke-linecap:round;
+  filter:drop-shadow(0 1px 1px rgba(40,5,2,.5));
+  transition:transform .3s ease; transform-origin:center;
+}
+.wax-seal:hover .seal-heart path{ transform:scale(1.08); }
+.cracks{ position:absolute; inset:8px; pointer-events:none; }
+.cracks path{
+  fill:none; stroke:#f0d9c8; stroke-width:1.8; stroke-linecap:round;
+  stroke-dasharray:1; stroke-dashoffset:1;
+}
+.wax-seal.cracked{ animation:sealShake .3s ease; }
+.wax-seal.cracked .cracks path{ animation:crackDraw .18s ease-out forwards; }
+.wax-seal.cracked .cracks path:nth-child(2){ animation-delay:.06s; }
+.wax-seal.cracked .cracks path:nth-child(3){ animation-delay:.1s; }
+.wax-seal.falling{
+  animation:none;
+  transition:transform .7s cubic-bezier(.45,0,.75,.35), opacity .7s ease;
+  transform:translate(30px,200px) rotate(135deg) scale(.92);
+  opacity:0; pointer-events:none;
+}
+
+/* --- Keyframes --- */
+@keyframes floatY{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
+@keyframes shadowPulse{ 0%,100%{ transform:translateX(-50%) scaleX(1); opacity:.85; } 50%{ transform:translateX(-50%) scaleX(.88); opacity:.6; } }
+@keyframes sealShake{ 0%,100%{ transform:translate(0); } 25%{ transform:translate(-2px,1px) rotate(-3deg); } 60%{ transform:translate(2px,-1px) rotate(3deg); } }
+@keyframes crackDraw{ to{ stroke-dashoffset:0; } }
+@keyframes hintPulse{ 0%,100%{ opacity:.6; } 50%{ opacity:1; } }
+
+@media (max-width:560px){
+  .env-name{ top:59%; }
+}

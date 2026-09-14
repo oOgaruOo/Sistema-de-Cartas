@@ -1,0 +1,18 @@
+{
+  "maquina": {
+    "baseMs": 24,
+    "varMs": 34,
+    "pausaComa": 170,
+    "pausaPunto": 340,
+    "scrollCada": 3
+  },
+  "petalos": {
+    "emisionPorSegundo": 26,
+    "probCorazon": 0.22,
+    "duracionRafaga": 4.5
+  },
+  "polvo": {
+    "areaPorParticula": 26000,
+    "maximo": 58
+  }
+}

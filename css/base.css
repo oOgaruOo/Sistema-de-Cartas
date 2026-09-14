@@ -1,0 +1,174 @@
+/* ============================================================
+   base.css · variables, reset, capas globales, botones y escenas
+   ============================================================ */
+:root{
+  --paper:#f3ecdd;
+  --paper-light:#fbf7ec;
+  --ink:#37281c;
+  --ink-soft:#82705a;
+  --line:rgba(55,40,28,.28);
+  --crimson:#96271f;
+  --crimson-deep:#6e1a13;
+  --gold:#b3813a;
+  --kraft:#e8dcc2;
+  --kraft-deep:#d8c7a2;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Cormorant Garamond', Georgia, serif;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:rgba(150,39,31,.18); }
+button{ font:inherit; color:inherit; }
+
+/* --- Capas fijas --- */
+.grain{
+  position:fixed; inset:0; z-index:95; pointer-events:none;
+  mix-blend-mode:multiply; opacity:.6;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+}
+#dust{ position:fixed; inset:0; z-index:1; }
+#fx{ position:fixed; inset:0; z-index:90; pointer-events:none; }
+
+/* --- Pantalla de arranque (mientras AJAX carga los datos) --- */
+#boot{
+  position:fixed; inset:0; z-index:200;
+  background:var(--paper);
+  display:grid; place-items:center; text-align:center;
+  transition:opacity .6s ease;
+}
+#boot.oculto{ opacity:0; pointer-events:none; }
+.boot-heart{ width:44px; height:40px; margin:0 auto 14px; display:block; }
+.boot-heart path{
+  fill:none; stroke:var(--crimson); stroke-width:3; stroke-linecap:round;
+  animation:heartbeat 2.4s ease-in-out infinite;
+}
+.boot-txt{ font-style:italic; color:var(--ink-soft); font-size:15px; letter-spacing:.04em; }
+
+/* --- Botón de sonido --- */
+.sound-btn{
+  position:fixed; top:18px; right:18px; z-index:100;
+  width:42px; height:42px; border-radius:50%;
+  background:transparent; border:1px solid var(--line);
+  display:grid; place-items:center; cursor:pointer;
+  color:var(--ink); transition:all .3s ease;
+}
+.sound-btn:hover{ background:var(--ink); color:var(--paper-light); border-color:var(--ink); }
+.sound-btn .slash{ display:none; }
+.sound-btn.muted .slash{ display:block; }
+.sound-btn.muted .w1,.sound-btn.muted .w2{ opacity:.2; }
+
+/* --- Botones genéricos --- */
+.btn{
+  font-family:'Cormorant Garamond',serif; font-weight:600;
+  text-transform:uppercase; letter-spacing:.16em; font-size:13px;
+  padding:15px 32px; border-radius:2px; cursor:pointer;
+  border:1px solid transparent;
+  transition:background .3s ease, color .3s ease, border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+}
+.btn:focus-visible,.sound-btn:focus-visible,input:focus-visible{
+  outline:2px dashed var(--crimson); outline-offset:3px;
+}
+.btn-primary{ background:var(--ink); color:var(--paper-light); border-color:var(--ink); }
+.btn-primary:hover{
+  background:var(--crimson); border-color:var(--crimson);
+  transform:translateY(-1px);
+  box-shadow:0 12px 26px -14px rgba(110,26,19,.6);
+}
+.btn-primary:active{ transform:translateY(0) scale(.98); }
+.btn-ghost{ background:transparent; color:var(--ink); border-color:var(--line); }
+.btn-ghost:hover{ border-color:var(--ink); background:rgba(55,40,28,.05); }
+.btn-sm{ padding:10px 18px; font-size:11.5px; }
+.hide{ display:none !important; }
+.btn:disabled{ opacity:.55; cursor:wait; }
+
+/* --- Etiqueta superior compartida --- */
+.eyebrow{
+  display:flex; align-items:center; gap:16px;
+  text-transform:uppercase; letter-spacing:.34em; font-size:12px;
+  color:var(--ink-soft); font-weight:600;
+}
+.eyebrow::before,.eyebrow::after{ content:''; width:38px; height:1px; background:var(--gold); opacity:.75; }
+
+/* --- Marco de escenas --- */
+.scene{
+  position:fixed; inset:0; z-index:2;
+  display:flex; overflow-y:auto;
+  opacity:0; visibility:hidden;
+  transition:opacity .8s ease, visibility 0s linear .8s;
+}
+.scene.active{
+  opacity:1; visibility:visible;
+  transition:opacity .8s ease, visibility 0s;
+}
+.scene-inner{
+  margin:auto; width:100%;
+  display:flex; flex-direction:column; align-items:center;
+  padding:56px 22px; text-align:center;
+}
+/* Entrada escalonada de los hijos al activar la escena */
+.scene.active .stag > *{ animation:riseIn .9s cubic-bezier(.2,.7,.2,1) both; }
+.scene.active .stag > *:nth-child(2){ animation-delay:.14s; }
+.scene.active .stag > *:nth-child(3){ animation-delay:.28s; }
+.scene.active .stag > *:nth-child(4){ animation-delay:.42s; }
+.scene.active .stag > *:nth-child(5){ animation-delay:.56s; }
+.scene.active .stag > *:nth-child(6){ animation-delay:.7s; }
+
+/* --- Keyframes compartidos --- */
+@keyframes riseIn{ from{ opacity:0; transform:translateY(22px); } to{ opacity:1; transform:none; } }
+@keyframes heartbeat{ 0%,100%{ transform:scale(1); } 7%{ transform:scale(1.07); } 14%{ transform:scale(1); } 21%{ transform:scale(1.05); } 28%{ transform:scale(1); } }
+
+/* --- Movimiento reducido (regla global de accesibilidad) --- */
+@media (prefers-reduced-motion: reduce){
+  .env-float,.env-shadow,.wax-seal,.q-heart,.big-heart,.env-hint,.boot-heart{ animation:none !important; }
+  .scene.active .stag > *{ animation-duration:.01s; }
+}
+
+/* ============================================================
+   ENDURECIDO RESPONSIVE · móviles y pantallas estrechas
+   (añadir al final de base.css)
+   ============================================================ */
+
+/* Sin scroll horizontal fantasma dentro de las escenas */
+.scene{ overflow-x:hidden; }
+
+/* Toques sin retardo ni zoom de doble toque */
+button, input, textarea, .wax-seal{ touch-action:manipulation; }
+
+/* Etiqueta superior: permite partir en dos líneas en pantallas estrechas */
+.eyebrow{ flex-wrap:wrap; justify-content:center; text-align:center; }
+
+/* Papel de la carta: en iOS, dvh no salta cuando la barra
+   de direcciones se esconde (navegadores viejos ignoran la 2ª línea) */
+#scene-letter .paper{
+  max-height:min(72vh,820px);
+  max-height:min(72dvh,820px);
+}
+
+/* Botón de sonido respeta el notch en horizontal */
+.sound-btn{
+  top:calc(18px + env(safe-area-inset-top,0px));
+  right:calc(18px + env(safe-area-inset-right,0px));
+}
+
+@media (max-width:480px){
+  .eyebrow{ gap:10px 14px; letter-spacing:.22em; font-size:11px; }
+  .eyebrow::before,.eyebrow::after{ width:22px; }
+}
+
+/* Cubre-pantallas y móviles muy pequeños (Galaxy Fold 280px) */
+@media (max-width:380px){
+  .stag .home-title{ font-size:clamp(38px,12vw,52px); }
+  .stag .cover-title{ font-size:clamp(46px,15vw,66px); }
+  .stag .gate-title{ font-size:clamp(34px,11vw,46px); }
+}
+
+/* Teléfonos en horizontal (poca altura) */
+@media (max-height:520px){
+  .scene-inner{ padding:30px 18px; }
+}

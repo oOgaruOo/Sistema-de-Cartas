@@ -1,0 +1,29 @@
+/* ============================================================
+   finales.css · pregunta y escenas de cierre
+   ============================================================ */
+.q-heart{ width:64px; height:58px; margin-bottom:18px; animation:bigBeat 2.4s ease-in-out infinite; }
+.q-heart path,.big-heart path,.ny-heart path{ fill:none; stroke:var(--crimson); stroke-width:2.4; stroke-linecap:round; }
+.q-title{
+  font-style:italic; font-weight:600;
+  font-size:clamp(42px,8.5vw,64px); line-height:1.05;
+  overflow-wrap:break-word;
+}
+.q-sub{ margin-top:14px; font-style:italic; font-size:clamp(16px,2.4vw,19px); color:var(--ink-soft); line-height:1.6; overflow-wrap:break-word;}
+.q-actions{ display:flex; gap:14px; margin-top:38px; flex-wrap:wrap; justify-content:center; }
+
+.big-heart{ width:110px; height:99px; margin-bottom:14px; animation:bigBeat 1.9s ease-in-out infinite; }
+.ny-heart{ width:78px; height:70px; margin-bottom:16px; }
+.ny-heart path{ stroke:var(--ink-soft); opacity:.75; }
+.f-text{
+  margin-top:16px; font-size:clamp(18px,2.8vw,22px);
+  font-style:italic; line-height:1.65; color:var(--ink); max-width:520px;
+  overflow-wrap:break-word;
+}
+.f-text b{ font-weight:600; color:var(--crimson); }
+
+@keyframes bigBeat{ 0%,100%{ transform:scale(1); } 10%{ transform:scale(1.09); } 20%{ transform:scale(1); } 30%{ transform:scale(1.06); } 40%{ transform:scale(1); } }
+
+@media (max-width:560px){
+  .q-actions{ flex-direction:column; width:100%; }
+  .q-actions .btn{ width:100%; max-width:300px; }
+}

@@ -1,0 +1,49 @@
+/* ============================================================
+   portada.css · escena inicial
+   ============================================================ */
+.cover-heart-bg{
+  position:absolute; z-index:-1; width:min(52vmin,460px); opacity:.9;
+  top:50%; left:50%; transform:translate(-50%,-54%);
+  pointer-events:none;
+}
+.cover-heart-bg path{ fill:none; stroke:rgba(150,39,31,.075); stroke-width:1.4; }
+
+.cover-title{
+  font-style:italic; font-weight:500;
+  font-size:clamp(66px,15vw,138px);
+  line-height:.95; margin-top:22px; letter-spacing:-.01em;
+  overflow-wrap:break-word;
+}
+.cover-title em{ font-style:inherit; color:var(--crimson); }
+.cover-sub{
+  font-size:clamp(17px,2.4vw,20px); font-style:italic; color:var(--ink-soft);
+  margin-top:20px; line-height:1.6; overflow-wrap:break-word;
+}
+.cover-sub em{ color:var(--crimson); }
+.cover-rule{ width:52px; height:1px; background:var(--gold); margin:30px 0 32px; }
+
+.cover-form{
+  display:grid; grid-template-columns:1fr 1fr; gap:14px 34px;
+  width:min(440px,100%);
+}
+.field{ text-align:left; }
+.field label{
+  display:block; text-transform:uppercase; letter-spacing:.26em;
+  font-size:10.5px; color:var(--ink-soft); font-weight:600; margin-bottom:4px;
+}
+.field input{
+  width:100%; background:transparent; border:none;
+  border-bottom:1px solid var(--line);
+  font-family:'Caveat',cursive; font-size:24px; color:var(--ink);
+  padding:4px 2px 7px; border-radius:0;
+  transition:border-color .3s ease;
+}
+.field input::placeholder{ font-style:italic; color:rgba(130,112,90,.55); font-size:20px; }
+.field input:focus{ border-color:var(--crimson); outline:none; }
+
+#startBtn{ margin-top:36px; }
+.cover-hint{ margin-top:18px; font-style:italic; font-size:14px; color:var(--ink-soft); }
+
+@media (max-width:560px){
+  .cover-form{ grid-template-columns:1fr; gap:16px; }
+}

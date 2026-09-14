@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una carta que se recuerda</title>
+<meta name="description" content="Pedir perdón, decir te extraño, celebrar un cumpleaños o escribirle a mamá: una carta con sello de cera, música y firma, que solo se abre con una palabra secreta.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 90'%3E%3Cpath d='M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76 Z' fill='%2396271f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/base.css?v=6">
+<link rel="stylesheet" href="css/landing.css?v=6">
+<link rel="stylesheet" href="css/portada.css?v=6">
+<link rel="stylesheet" href="css/sobre.css?v=6">
+<link rel="stylesheet" href="css/carta.css?v=6">
+<link rel="stylesheet" href="css/finales.css?v=6">
+<link rel="stylesheet" href="css/cerrojo.css?v=6">
+<link rel="stylesheet" href="css/admin.css?v=6">
+
+<style>
+.home-title{ font-style:italic; font-weight:500; font-size:clamp(44px,8.5vw,84px); line-height:1.03; margin-top:20px; overflow-wrap:break-word; }
+.home-sub{ margin-top:18px; font-style:italic; font-size:clamp(16px,2.4vw,19px); color:var(--ink-soft); line-height:1.65; max-width:560px; overflow-wrap:break-word; }
+.home-hint{ margin-top:22px; font-style:italic; font-size:14px; color:var(--ink-soft); }
+.home-aviso{ margin-top:16px; font-style:italic; font-size:15px; color:var(--crimson); max-width:520px; line-height:1.55; overflow-wrap:break-word; }
+body{ transition:background .6s ease; }
+
+/* ---- Índice de tipos de carta (portada) ---- */
+.home-fondo{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
+.home-fondo svg{ width:min(58vmin,420px); height:auto; opacity:.055; color:var(--crimson); }
+.home-fondo svg path,.home-fondo svg circle,.home-fondo svg ellipse,.home-fondo svg rect,.home-fondo svg line{ fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+.home-index{ width:min(560px,100%); margin-top:36px; text-align:left; }
+.home-item{
+  display:flex; align-items:center; gap:16px; width:100%;
+  background:transparent; border:none; border-top:1px solid var(--line);
+  padding:15px 6px; cursor:pointer; text-align:left;
+  transition:background .3s ease, padding-left .3s ease;
+}
+.home-item:last-of-type{ border-bottom:1px solid var(--line); }
+.home-item:hover{ background:rgba(55,40,28,.045); padding-left:14px; }
+.home-item:focus-visible{ outline:2px dashed var(--crimson); outline-offset:-2px; }
+.ti-embl{ width:44px; height:40px; flex:0 0 44px; color:var(--crimson); }
+.ti-embl svg{ width:100%; height:100%; display:block; }
+.ti-embl svg path,.ti-embl svg circle,.ti-embl svg ellipse,.ti-embl svg rect,.ti-embl svg line{ fill:none; stroke:currentColor; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+.ti-txt{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+.ti-txt strong{ font-style:italic; font-weight:600; font-size:20px; }
+.ti-txt em{ font-size:14.5px; color:var(--ink-soft); }
+.ti-flecha{ margin-left:auto; width:18px; height:18px; flex:0 0 18px; color:var(--gold); opacity:.45; transition:opacity .3s ease, transform .3s ease; }
+.home-item:hover .ti-flecha{ opacity:1; transform:translateX(3px); }
+@media (max-width:560px){
+  .ti-embl{ width:36px; height:33px; flex-basis:36px; }
+  .ti-txt strong{ font-size:17.5px; }
+  .ti-txt em{ font-size:13px; }
+  .home-item{ gap:12px; padding:13px 4px; }
+}
+
+/* Editor: textarea + selector de tema */
+.admin-form textarea{
+  width:100%; min-height:230px; resize:vertical;
+  background:rgba(255,252,244,.55); border:1px solid var(--line); border-radius:3px;
+  font-family:'Cormorant Garamond',Georgia,serif; font-size:18.5px; line-height:1.62;
+  color:var(--ink); padding:14px 16px; transition:border-color .3s ease;
+}
+.admin-form textarea:focus{ border-color:var(--crimson); outline:none; }
+.admin-form textarea::placeholder{ font-style:italic; color:rgba(130,112,90,.55); }
+.admin-form select{
+  width:100%; background:transparent; border:none; border-bottom:1px solid var(--line);
+  font-family:'Caveat',cursive; font-size:22px; color:var(--ink);
+  padding:4px 26px 7px 2px; border-radius:0; cursor:pointer;
+  appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2382705a' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 4px center;
+}
+.admin-form select:focus{ border-color:var(--crimson); outline:none; }
+.admin-id{ font-family:ui-monospace,Consolas,monospace; font-size:12px; color:var(--ink-soft); margin:0 0 16px; word-break:break-all; }
+.admin-note b{ font-style:normal; color:var(--ink); }
+
+/* Borrador automático */
+.draft-box{ border:1px dashed var(--gold); border-radius:3px; background:rgba(179,129,58,.07); padding:14px 16px; margin:0 0 20px; text-align:center; }
+.draft-txt{ font-style:italic; font-size:15px; color:var(--ink-soft); margin-bottom:10px; }
+.draft-btns{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.draft-status{ font-style:italic; font-size:13px; color:var(--ink-soft); margin-top:10px; min-height:1.2em; text-align:center; }
+
+/* Momento sellado */
+.sellado{ margin-top:16px; font-style:italic; font-size:14px; color:var(--ink-soft); letter-spacing:.03em; min-height:1.3em; }
+
+/* ============ TEMAS · paletas ============ */
+body.tema-teextrano{ --crimson:#a9552e; --crimson-deep:#7c3a1c; --paper:#f4ecd8; --paper-light:#fbf4e3; --kraft:#e9dcc0; --kraft-deep:#d8c49a; }
+body.tema-teextrano .flap-back{ background:#7c3a1c; }
+body.tema-cumple{ --crimson:#1f6b66; --crimson-deep:#144d49; --paper:#eef0e4; --paper-light:#f9faf1; --kraft:#e3ddc2; --kraft-deep:#cfc49b; }
+body.tema-cumple .flap-back{ background:#144d49; }
+body.tema-cumple .wax-seal{ background:radial-gradient(circle at 34% 30%, #e3c184 0%, #c99b45 42%, #9a7327 78%, #7a5a1c 100%); }
+body.tema-madre{ --crimson:#b04a6e; --crimson-deep:#7e3149; --paper:#f6ebe7; --paper-light:#fdf5f2; --kraft:#ecd9d2; --kraft-deep:#dcbfb6; }
+body.tema-madre .flap-back{ background:#7e3149; }
+body.tema-madre .wax-seal{ background:radial-gradient(circle at 34% 30%, #e0a8bd 0%, #c9779a 42%, #9c4a6c 78%, #7c3752 100%); }
+body.tema-aniversario{ --crimson:#7a2a52; --crimson-deep:#561c3a; --paper:#f2ecf0; --paper-light:#faf5f8; --kraft:#e6d9d1; --kraft-deep:#d2bfae; }
+body.tema-aniversario .flap-back{ background:#561c3a; }
+
+/* ============ EMBLEMAS ANIMADOS POR TEMA ============ */
+.embl{ color:var(--crimson); }
+.embl path, .embl circle, .embl ellipse, .embl rect, .embl line{
+  fill:none; stroke:currentColor; stroke-width:2.6;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.gate-heart.embl{ color:var(--ink-soft); }
+.ny-heart.embl{ color:var(--ink-soft); }
+.seal-heart.embl{ color:#f2e4d3; }
+.seal-heart.embl path, .seal-heart.embl circle, .seal-heart.embl ellipse,
+.seal-heart.embl rect, .seal-heart.embl line{ stroke-width:3.4; }
+.mini-heart.embl path, .mini-heart.embl circle, .mini-heart.embl ellipse,
+.mini-heart.embl rect, .mini-heart.embl line{ stroke-width:9; }
+.cover-heart-bg.embl path, .cover-heart-bg.embl circle, .cover-heart-bg.embl ellipse,
+.cover-heart-bg.embl rect, .cover-heart-bg.embl line{ stroke-width:1.2; opacity:.14; }
+
+/* Avión (te extraño) */
+.em-plane{ transform-box:fill-box; transform-origin:center; animation:planeFloat 3.4s ease-in-out infinite; }
+.em-trail{ stroke-dasharray:3 5; animation:trailRun 2.4s linear infinite; }
+@keyframes planeFloat{ 0%,100%{ transform:translate(0,0) rotate(0deg); } 50%{ transform:translate(2px,-4px) rotate(2.5deg); } }
+@keyframes trailRun{ to{ stroke-dashoffset:-32; } }
+
+/* Pastel (cumpleaños) */
+.em-flame{ transform-box:fill-box; transform-origin:50% 100%; animation:flicker 1.5s ease-in-out infinite; }
+@keyframes flicker{ 0%,100%{ transform:scale(1,1); } 30%{ transform:scale(1.08,.9); } 60%{ transform:scale(.92,1.1); } }
+
+/* Flor (mamá) */
+.em-flower{ transform-box:fill-box; transform-origin:50% 100%; animation:sway 4.2s ease-in-out infinite; }
+.em-petals{ transform-box:fill-box; transform-origin:center; animation:petalBreathe 3.6s ease-in-out infinite; }
+@keyframes sway{ 0%,100%{ transform:rotate(-3deg); } 50%{ transform:rotate(3deg); } }
+@keyframes petalBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.08); } }
+
+/* Anillos (aniversario) */
+.em-ring-shine{ stroke-dasharray:14 86; stroke-width:4; animation:ringRun 3.4s linear infinite; }
+@keyframes ringRun{ to{ stroke-dashoffset:-100; } }
+.em-spark{ transform-box:fill-box; transform-origin:center; animation:sparkle 2.8s ease-in-out infinite; }
+@keyframes sparkle{ 0%,100%{ transform:scale(.8); opacity:.7; } 50%{ transform:scale(1.15); opacity:1; } }
+
+/* Vista previa del tema en el editor */
+.tema-preview{ width:78px; height:70px; margin:12px auto 0; }
+.tema-preview svg{ width:100%; height:100%; display:block; }
+
+@media (prefers-reduced-motion: reduce){
+  .em-plane,.em-trail,.em-flame,.em-flower,.em-petals,.em-ring-shine,.em-spark{ animation:none !important; }
+}
+
+/* Llave del editor */
+#scene-lock .gate-form.erronea{ animation:gateShake .4s ease; }
+#scene-lock .gate-form.erronea input{ border-color:var(--crimson); }
+@keyframes gateShake{
+  0%,100%{ transform:translateX(0); }
+  20%{ transform:translateX(-8px); } 40%{ transform:translateX(7px); }
+  60%{ transform:translateX(-5px); } 80%{ transform:translateX(3px); }
+}
+</style>
+</head>
+<body>
+
+<canvas id="dust" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div id="boot" role="status" aria-live="polite">
+  <div>
+    <svg class="boot-heart" viewBox="0 0 100 90" aria-hidden="true">
+      <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76"/>
+    </svg>
+    <p class="boot-txt">Preparando…</p>
+  </div>
+</div>
+
+<button id="soundBtn" class="sound-btn" aria-label="Silenciar o activar el sonido" title="Sonido">
+  <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M11 5 6.5 9H3v6h3.5L11 19V5z" fill="currentColor" stroke="none"/>
+    <path class="w1" d="M15.5 8.8a4.6 4.6 0 0 1 0 6.4"/>
+    <path class="w2" d="M18.4 6a8.6 8.6 0 0 1 0 12"/>
+    <line class="slash" x1="15" y1="9" x2="21" y2="15"/>
+    <line class="slash" x1="21" y1="9" x2="15" y2="15"/>
+  </svg>
+</button>
+
+<!-- ============ Escena · Inicio (índice de cartas) ============ -->
+<section class="scene active" id="scene-home">
+  <div class="home-fondo" aria-hidden="true"><svg viewBox="0 0 100 90"></svg></div>
+  <div class="scene-inner stag">
+    <p class="eyebrow">Cartas que se recuerdan</p>
+    <h1 class="home-title">Di lo que sientes<br>como se debe.</h1>
+    <p class="home-sub">Elige el motivo de tu carta. Del resto nos encargamos nosotros:
+    el sobre, el sello de cera, la música y la firma. Solo quien tenga la palabra secreta podrá abrirla.</p>
+
+    <nav class="home-index" id="homeIndex" aria-label="Tipos de carta">
+      <button type="button" class="home-item" data-tema="disculpa">
+        <span class="ti-embl"><svg viewBox="0 0 100 90" aria-hidden="true"></svg></span>
+        <span class="ti-txt"><strong>Pedir perdón</strong><em>para lo que no cabe en un mensaje</em></span>
+        <svg class="ti-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <button type="button" class="home-item" data-tema="teextrano">
+        <span class="ti-embl"><svg viewBox="0 0 100 90" aria-hidden="true"></svg></span>
+        <span class="ti-txt"><strong>Te extraño</strong><em>para los silencios que pesan</em></span>
+        <svg class="ti-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <button type="button" class="home-item" data-tema="cumple">
+        <span class="ti-embl"><svg viewBox="0 0 100 90" aria-hidden="true"></svg></span>
+        <span class="ti-txt"><strong>Feliz cumpleaños</strong><em>para celebrar que existe</em></span>
+        <svg class="ti-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <button type="button" class="home-item" data-tema="madre">
+        <span class="ti-embl"><svg viewBox="0 0 100 90" aria-hidden="true"></svg></span>
+        <span class="ti-txt"><strong>Para mamá</strong><em>para lo que nunca se terminó de decir</em></span>
+        <svg class="ti-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <button type="button" class="home-item" data-tema="aniversario">
+        <span class="ti-embl"><svg viewBox="0 0 100 90" aria-hidden="true"></svg></span>
+        <span class="ti-txt"><strong>Aniversario</strong><em>para lo que sigue creciendo</em></span>
+        <svg class="ti-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </nav>
+
+    <p class="home-hint">Pasa el cursor por cada tipo para escuchar su música. En móvil, elige directamente.</p>
+    <p class="home-aviso hide" id="homeAviso"></p>
+  </div>
+</section>
+
+<!-- ============ Escena · Cerrojo ============ -->
+<section class="scene" id="scene-gate">
+  <div class="scene-inner stag">
+    <svg class="gate-heart" viewBox="0 0 100 90" aria-hidden="true">
+      <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76"/>
+    </svg>
+    <p class="eyebrow">Solo para una persona</p>
+    <h2 class="gate-title">Esta carta es privada.</h2>
+    <p class="gate-sub">Escribe la palabra que solo ustedes dos conocen.</p>
+    <form id="gateForm" class="gate-form" autocomplete="off">
+      <input id="gateInput" type="text" maxlength="60" placeholder="vuestra palabra" aria-label="Palabra secreta"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button class="btn btn-primary" id="gateBtn" type="submit">Abrir</button>
+    </form>
+    <p class="gate-hint" id="gatePista"></p>
+    <p class="gate-error" id="gateError" role="alert"></p>
+  </div>
+</section>
+
+<!-- ============ Escena · Llave del editor ============ -->
+<section class="scene" id="scene-lock">
+  <div class="scene-inner stag">
+    <svg class="gate-heart" viewBox="0 0 100 90" aria-hidden="true">
+      <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76"/>
+    </svg>
+    <p class="eyebrow">Escritorio del remitente</p>
+    <h2 class="gate-title">Esta carta está bajo llave.</h2>
+    <p class="gate-sub">Escribe la contraseña de editor para verla y modificarla.</p>
+    <form id="lockForm" class="gate-form" autocomplete="off">
+      <input id="lockInput" type="password" maxlength="60" placeholder="contraseña de editor" aria-label="Contraseña de editor"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button class="btn btn-primary" id="lockBtn" type="submit">Abrir escritorio</button>
+    </form>
+    <p class="gate-error" id="lockError" role="alert"></p>
+    <p class="gate-hint" id="lockHint">La contraseña la definiste al crear la carta.</p>
+  </div>
+</section>
+
+<!-- ============ Escena · Portada de la carta ============ -->
+<section class="scene" id="scene-cover">
+  <svg class="cover-heart-bg" viewBox="0 0 100 90" aria-hidden="true">
+    <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76"/>
+  </svg>
+  <div class="scene-inner stag">
+    <p class="eyebrow" id="coverEyebrow">Una carta para pedir perdón</p>
+    <h1 class="cover-title" id="coverTitle">Lo siento<em>,</em></h1>
+    <p class="cover-sub" id="coverSub">Hay cosas que no caben en un mensaje de texto.<br>Esta merecía ser una <em>carta</em>.</p>
+    <span class="cover-rule"></span>
+    <form id="coverForm" class="cover-form hide" autocomplete="off">
+      <div class="field">
+        <label for="toName">Para</label>
+        <input id="toName" type="text" maxlength="24" placeholder="su nombre">
+      </div>
+      <div class="field">
+        <label for="fromName">De</label>
+        <input id="fromName" type="text" maxlength="24" placeholder="tu nombre">
+      </div>
+    </form>
+    <button class="btn btn-primary" id="startBtn" type="button">Abrir la carta</button>
+    <p class="cover-hint" id="coverHint">Toma un minuto. Vale la pena leerlo despacio.</p>
+  </div>
+</section>
+
+<!-- ============ Escena · El sobre ============ -->
+<section class="scene" id="scene-envelope">
+  <div class="scene-inner stag">
+    <p class="eyebrow" id="envEyebrow">Carta entregada a mano</p>
+    <div class="env-stage" id="envStage">
+      <div class="env-parallax" id="envParallax">
+        <div class="env-float">
+          <div class="envelope">
+            <div class="env-back"></div>
+            <div class="letter-mini" id="letterMini">
+              <svg class="mini-heart" viewBox="0 0 100 90" aria-hidden="true">
+                <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76 Z"/>
+              </svg>
+              <span class="mini-line"></span><span class="mini-line"></span>
+              <span class="mini-line"></span><span class="mini-line"></span>
+              <span class="mini-line"></span>
+            </div>
+            <div class="env-pocket">
+              <svg class="pocket-lines" viewBox="0 0 360 240" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 3 L180 135 L357 3" fill="none" stroke="rgba(60,40,20,.1)" stroke-width="7" stroke-linejoin="round"/>
+                <path d="M0 0 L180 132 L360 0" fill="none" stroke="rgba(96,74,48,.22)" stroke-width="1"/>
+              </svg>
+              <p class="env-name" id="envName">Para ti</p>
+            </div>
+            <div class="flap" id="flap">
+              <div class="flap-face flap-front"></div>
+              <div class="flap-face flap-back"></div>
+            </div>
+            <div class="seal-pos">
+              <button class="wax-seal" id="waxSeel" title="Romper el sello" aria-label="Romper el sello de cera y abrir la carta">
+                <svg class="seal-heart" viewBox="0 0 100 90" aria-hidden="true">
+                  <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76"/>
+                </svg>
+                <svg class="cracks" viewBox="0 0 100 100" aria-hidden="true">
+                  <path pathLength="1" d="M52 8 L56 34 L44 48 L52 70"/>
+                  <path pathLength="1" d="M34 30 L45 42 L37 60"/>
+                  <path pathLength="1" d="M70 34 L58 48 L66 62 L58 78"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="env-shadow"></div>
+    </div>
+    <p class="env-hint" id="envHint">Toca el <em>sello de cera</em> para abrirla</p>
+  </div>
+</section>
+
+<!-- ============ Escena · La carta ============ -->
+<section class="scene" id="scene-letter">
+  <div class="scene-inner">
+    <article class="paper">
+      <div class="paper-scroll" id="paperScroll">
+        <header class="letter-head">
+          <p class="letter-date" id="letterDate"></p>
+          <p class="letter-to" id="letterTo">Para ti</p>
+          <span class="head-rule"></span>
+        </header>
+        <div class="letter-body" id="letterBody"></div>
+      </div>
+      <span class="paper-frame" aria-hidden="true"></span>
+    </article>
+    <div class="letter-actions">
+      <button class="btn btn-ghost btn-sm" id="skipBtn">Mostrar la carta completa</button>
+      <button class="btn btn-primary hide" id="continueBtn">Continuar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Escena · La pregunta ============ -->
+<section class="scene" id="scene-question">
+  <div class="scene-inner stag">
+    <svg class="q-heart" viewBox="0 0 100 90" aria-hidden="true">
+      <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76"/>
+    </svg>
+    <h2 class="q-title" id="qTitle">¿Me perdonas?</h2>
+    <p class="q-sub" id="qSub">Puedes responder con la verdad.<br>Las dos respuestas están bien.</p>
+    <div class="q-actions">
+      <button class="btn btn-primary" id="forgiveBtn">Sí, te perdono</button>
+      <button class="btn btn-ghost" id="notYetBtn">Todavía me duele</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Escena · Perdón concedido ============ -->
+<section class="scene" id="scene-forgiven">
+  <div class="scene-inner stag">
+    <svg class="big-heart" viewBox="0 0 100 90" aria-hidden="true">
+      <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76"/>
+    </svg>
+    <h2 class="q-title" id="forgivenTitle">Gracias.</h2>
+    <p class="f-text" id="forgivenText">No doy este momento por sentado.<br>Lo que pasó me enseñó; <b>lo que viene, lo pienso cuidar contigo.</b></p>
+    <p class="sellado" id="selladoTxt"></p>
+    <div class="q-actions">
+      <button class="btn btn-primary" id="reliveBtn">Revivir este instante</button>
+      <button class="btn btn-ghost" id="restartBtn1">Volver a leer la carta</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Escena · Aún duele ============ -->
+<section class="scene" id="scene-notyet">
+  <div class="scene-inner stag">
+    <svg class="ny-heart" viewBox="0 0 100 90" aria-hidden="true">
+      <path d="M50 76 C28 60 10 46 10 28 C10 14 21 7 31 7 C40 7 47 13 50 20 C53 13 60 7 69 7 C79 7 90 14 90 28 C90 46 72 60 50 76"/>
+    </svg>
+    <h2 class="q-title" id="notyetTitle">Gracias por tu honestidad.</h2>
+    <p class="f-text" id="notyetText">Nadie puede exigirte sanar con prisa; yo, menos que nadie.<br><b>Tómate tu tiempo.</b> Esta carta seguirá guardada, y yo también aquí seguiré.</p>
+    <div class="q-actions">
+      <button class="btn btn-primary" id="rereadBtn">Leer la carta otra vez</button>
+      <button class="btn btn-ghost" id="restartBtn2">Volver a leer la carta</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Escena · Editor ============ -->
+<section class="scene" id="scene-admin">
+  <div class="scene-inner">
+    <div class="admin-card">
+      <p class="eyebrow">Escritorio del remitente</p>
+      <h2 class="admin-title" id="adminTitle">Escribe tu carta</h2>
+      <p class="admin-sub" id="adminSub"></p>
+      <p class="admin-id hide" id="adminId"></p>
+
+      <div id="draftBox" class="draft-box hide">
+        <p class="draft-txt" id="draftTxt"></p>
+        <div class="draft-btns">
+          <button type="button" class="btn btn-sm" id="draftRecuperar">Recuperar borrador</button>
+          <button type="button" class="btn btn-sm btn-ghost" id="draftDescartar">Descartar</button>
+        </div>
+      </div>
+
+      <form id="adminForm" class="admin-form" autocomplete="off">
+        <div class="tema-cabecera" id="temaCabecera">
+          <span class="tc-emblema" id="temaCabEmblema" aria-hidden="true"><svg viewBox="0 0 100 90"></svg></span>
+          <span class="tc-txt">
+            <strong class="tc-nombre" id="temaCabNombre">Pedir perdón</strong>
+            <em class="tc-frase" id="temaCabFrase">Una carta para pedir perdón</em>
+          </span>
+          <button type="button" class="btn btn-sm btn-ghost tc-cambiar" id="temaCambiar">Cambiar tipo</button>
+        </div>
+        <div class="admin-grid">
+          <div class="field">
+            <label for="adminPara">Su nombre</label>
+            <input id="adminPara" type="text" maxlength="24" placeholder="Sofía">
+          </div>
+          <div class="field">
+            <label for="adminDe">Tu nombre</label>
+            <input id="adminDe" type="text" maxlength="24" placeholder="Carlos">
+          </div>
+        </div>
+        <div class="field">
+          <label for="adminTexto">Tu carta</label>
+          <textarea id="adminTexto" rows="10" maxlength="8000" placeholder="Llevo días queriendo decirte esto…&#10;&#10;*Lo siento.*&#10;&#10;Y no lo digo por decir: lo digo porque me duele lo que te hice…"></textarea>
+          <p class="admin-note">Separa los párrafos con una línea en blanco. Una línea entre <b>*asteriscos*</b> aparecerá grande, como el momento central de la carta. Tu firma va sola, al final. La carta se guarda sola mientras escribes.</p>
+        </div>
+        <div class="field">
+          <label for="adminDespedida">Despedida (antes de tu firma)</label>
+          <input id="adminDespedida" type="text" maxlength="60" placeholder="Con todo mi corazón,">
+        </div>
+        <div class="field">
+          <label for="adminClave">Palabra secreta</label>
+          <input id="adminClave" type="text" maxlength="60" placeholder="solo ustedes dos la conocen"
+                 autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <p class="admin-note" id="adminClaveNota"></p>
+        </div>
+        <div class="field">
+          <label for="adminPista">Frase-pista (opcional)</label>
+          <input id="adminPista" type="text" maxlength="80" placeholder="¿dónde nos conocimos?">
+        </div>
+        <div class="field">
+          <label for="adminPass">Contraseña de editor</label>
+          <input id="adminPass" type="password" maxlength="60" placeholder="para editar esta carta después" autocomplete="new-password">
+          <p class="admin-note">Guárdala bien: sin ella no se puede editar la carta. Nunca se guarda en el borrador.</p>
+        </div>
+        <button class="btn btn-primary" id="adminGuardar" type="submit">Crear carta</button>
+        <p class="draft-status" id="draftStatus" aria-live="polite"></p>
+      </form>
+      <p class="admin-msg" id="adminMsg" role="status"></p>
+      <div id="adminLinks" class="admin-links hide"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Módulos -->
+<script src="js/core/ajax.js?v=8"></script>
+<script src="js/core/utils.js?v=8"></script>
+<script src="js/core/audio.js?v=11"></script>
+<script src="js/ui/dust.js?v=8"></script>
+<script src="js/ui/effects.js?v=8"></script>
+<script src="js/ui/scenes.js?v=8"></script>
+<script src="js/features/parallax.js?v=8"></script>
+<script src="js/features/typewriter.js?v=8"></script>
+<script src="js/features/envelope.js?v=8"></script>
+<script src="js/features/letter.js?v=8"></script>
+<script src="js/features/temas.js?v=12"></script>
+<script src="js/features/admin.js?v=14"></script>
+<script src="js/app.js?v=12"></script>
+</body>
+</html>

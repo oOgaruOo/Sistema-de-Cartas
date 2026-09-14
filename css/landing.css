@@ -1,0 +1,237 @@
+/* ============================================================
+   landing.css · inicio de la plataforma + editor de texto
+   ============================================================ */
+.home-heart{ width:52px; height:47px; margin-bottom:18px; animation:bigBeat 2.6s ease-in-out infinite; }
+.home-heart path{ fill:none; stroke:var(--crimson); stroke-width:2.4; stroke-linecap:round; }
+.home-title{
+  font-style:italic; font-weight:500;
+  font-size:clamp(46px,9vw,88px); line-height:1.02; margin-top:20px;
+}
+.home-sub{
+  margin-top:18px; font-style:italic; font-size:clamp(16px,2.4vw,19px);
+  color:var(--ink-soft); line-height:1.65; max-width:560px; overflow-wrap:break-word;
+}
+#crearBtn{ margin-top:34px; }
+.home-hint{ margin-top:20px; font-style:italic; font-size:14px; color:var(--ink-soft); }
+.home-aviso{
+  margin-top:16px; font-style:italic; font-size:15px; color:var(--crimson);
+  max-width:520px; line-height:1.55; overflow-wrap:break-word;
+}
+
+/* --- Editor: área de texto de la carta --- */
+.admin-form textarea{
+  width:100%; min-height:230px; resize:vertical;
+  background:rgba(255,252,244,.55); border:1px solid var(--line); border-radius:3px;
+  font-family:'Cormorant Garamond',Georgia,serif; font-size:18.5px; line-height:1.62;
+  color:var(--ink); padding:14px 16px; transition:border-color .3s ease;
+}
+.admin-form textarea:focus{ border-color:var(--crimson); outline:none; }
+.admin-form textarea::placeholder{ font-style:italic; color:rgba(130,112,90,.55); }
+.admin-id{
+  font-family:ui-monospace,Consolas,monospace; font-size:12px;
+  color:var(--ink-soft); margin:0 0 16px; word-break:break-all;
+}
+.admin-note b{ font-style:normal; color:var(--ink); }
+
+@media (prefers-reduced-motion: reduce){ .home-heart{ animation:none; } }
+
+/* ============================================================
+   audio.js · v4 — SFX + melodía romántica de fondo sintetizada
+   La música arranca con el primer gesto del visitante (política
+   de autoplay de los navegadores) y acompaña todo el recorrido.
+   ============================================================ */
+(function (App) {
+  'use strict';
+
+  var ctx = null;
+  var activado = true;
+  var MASTER = 0.9;   /* volumen de los efectos puntuales */
+
+  function asegurar() {
+    if (!activado) return null;
+    try {
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state === 'suspended') ctx.resume();
+      return ctx;
+    } catch (e) { return null; }
+  }
+
+  /* ---------- Efectos puntuales (igual que v3) ---------- */
+  function tono(freq, t0, dur, vol, tipo) {
+    var c = asegurar(); if (!c) return;
+    var t = c.currentTime + t0;
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = tipo || 'triangle';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol * MASTER, t + .012);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t); o.stop(t + dur + .05);
+    if (tipo !== 'sine') {
+      var o2 = c.createOscillator(), g2 = c.createGain();
+      o2.type = 'sine'; o2.frequency.value = freq * 2;
+      g2.gain.setValueAtTime(.0001, t);
+      g2.gain.exponentialRampToValueAtTime(vol * MASTER * .3, t + .012);
+      g2.gain.exponentialRampToValueAtTime(.0001, t + dur * .85);
+      o2.connect(g2); g2.connect(c.destination);
+      o2.start(t); o2.stop(t + dur + .05);
+    }
+  }
+
+  function golpe(freq, t0, dur, vol) {
+    var c = asegurar(); if (!c) return;
+    var t = c.currentTime + t0;
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(freq, t);
+    o.frequency.exponentialRampToValueAtTime(freq * .6, t + dur);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol * MASTER, t + .01);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t); o.stop(t + dur + .05);
+  }
+
+  function ruido(t0, dur, vol, freq, q) {
+    var c = asegurar(); if (!c) return;
+    var len = Math.max(1, (dur * c.sampleRate) | 0);
+    var buf = c.createBuffer(1, len, c.sampleRate);
+    var d = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    var src = c.createBufferSource(); src.buffer = buf;
+    var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
+    var g = c.createGain();
+    var t = c.currentTime + t0;
+    g.gain.setValueAtTime(vol * MASTER, t);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    src.connect(f); f.connect(g); g.connect(c.destination);
+    src.start(t); src.stop(t + dur + .02);
+  }
+
+  /* ============================================================
+     MÚSICA DE FONDO · caja de música en La menor
+     Progresión: Am · F · C · G · Em · Am · F · E(→ vuelve a Am)
+     8 compases × 3,4 s ≈ 27 s de loop, con bajo sostenido
+     y arpegio con destello de octava. Volumen de ambiente:
+     acompaña sin pelear con la máquina de escribir.
+     ============================================================ */
+  var musica = { iniciada: false, temporizador: null, indice: 0 };
+  var PROGRESION = [
+    { bajo: 110.00, notas: [220.00, 261.63, 329.63, 440.00, 329.63, 261.63] }, /* Am */
+    { bajo:  87.31, notas: [174.61, 220.00, 261.63, 349.23, 261.63, 220.00] }, /* F  */
+    { bajo: 130.81, notas: [261.63, 329.63, 392.00, 523.25, 392.00, 329.63] }, /* C  */
+    { bajo:  98.00, notas: [196.00, 246.94, 293.66, 392.00, 293.66, 246.94] }, /* G  */
+    { bajo:  82.41, notas: [164.81, 196.00, 246.94, 329.63, 246.94, 196.00] }, /* Em */
+    { bajo: 110.00, notas: [220.00, 261.63, 329.63, 440.00, 329.63, 261.63] }, /* Am */
+    { bajo:  87.31, notas: [174.61, 220.00, 261.63, 349.23, 261.63, 220.00] }, /* F  */
+    { bajo:  82.41, notas: [164.81, 207.65, 246.94, 329.63, 246.94, 207.65] }  /* E  */
+  ];
+  var DUR_COMPAS = 3400;   /* ms por acorde */
+
+  function notaCaja(freq, t, vol) {
+    /* timbre de caja de música: ataque dulce, cola larga, brillo de octava */
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + .02);
+    g.gain.exponentialRampToValueAtTime(.0001, t + 1.9);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t + 2);
+
+    var o2 = ctx.createOscillator(), g2 = ctx.createGain();
+    o2.type = 'sine'; o2.frequency.value = freq * 2;
+    g2.gain.setValueAtTime(.0001, t);
+    g2.gain.exponentialRampToValueAtTime(vol * .28, t + .015);
+    g2.gain.exponentialRampToValueAtTime(.0001, t + .9);
+    o2.connect(g2); g2.connect(ctx.destination);
+    o2.start(t); o2.stop(t + 1);
+  }
+
+  function bajoSuave(freq, t) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(.07, t + .5);
+    g.gain.setValueAtTime(.07, t + 2.4);
+    g.gain.exponentialRampToValueAtTime(.0001, t + 3.4);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t + 3.5);
+  }
+
+  function compas() {
+    if (!activado || !ctx || ctx.state !== 'running') return;
+    var c = PROGRESION[musica.indice % PROGRESION.length];
+    musica.indice++;
+    var t = ctx.currentTime + .06;
+    bajoSuave(c.bajo, t);
+    for (var i = 0; i < c.notas.length; i++) {
+      /* leve variación de intensidad: nada suena robótico */
+      notaCaja(c.notas[i], t + .18 + i * .5, .085 + Math.random() * .03);
+    }
+  }
+
+  function iniciarMusica() {
+    if (!activado) return;
+    if (musica.temporizador || !ctx) return;
+    compas();
+    musica.temporizador = setInterval(compas, DUR_COMPAS);
+  }
+
+  function pararMusica() {
+    if (musica.temporizador) { clearInterval(musica.temporizador); musica.temporizador = null; }
+  }
+
+  /* la melodía descansa cuando la pestaña no está a la vista */
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) pararMusica();
+    else if (activado && musica.iniciada) iniciarMusica();
+  });
+
+  /* primer gesto del visitante: habilita el audio Y arranca la melodía
+     (los navegadores no permiten sonar antes de esa primera interacción) */
+  function desbloquear() {
+    var c = asegurar();
+    if (!c) return;
+    try {
+      var o = c.createOscillator(), g = c.createGain();
+      g.gain.value = .0001;
+      o.connect(g); g.connect(c.destination);
+      o.start(0); o.stop(c.currentTime + .05);
+    } catch (e) {}
+    if (!musica.iniciada) {
+      musica.iniciada = true;
+      if (activado) setTimeout(iniciarMusica, 600);   /* entra suave, tras el clic */
+    }
+  }
+  if (document.addEventListener) {
+    document.addEventListener('pointerdown', desbloquear, { once: true });
+    document.addEventListener('keydown', desbloquear, { once: true });
+  }
+
+  App.AudioFX = {
+    get activado() { return activado; },
+
+    alternar: function () {
+      activado = !activado;
+      if (!activado) pararMusica();
+      else if (musica.iniciada) iniciarMusica();
+    },
+
+    tecla:    function () { if (Math.random() < .8) tono(1250 + Math.random() * 950, 0, .05, .02, 'square'); },
+    crujido:  function () { ruido(0, .16, .38, 850, 1.6); golpe(120, 0, .14, .16); },
+    deslizar: function () { ruido(0, .42, .09, 650, .8); },
+    sello:    function () { golpe(95, 0, .22, .34); ruido(0, .09, .2, 480, 1); golpe(48, .02, .18, .22); },
+    nota:     function (f) {
+      var fr = f || 392;
+      tono(fr, 0, 1.3, .14);
+      tono(fr * 1.5, .04, 1.1, .06);
+    },
+    acorde:   function () {
+      var raiz = 196;
+      [1, 1.5, 2, 2.5, 3].forEach(function (m, i) { tono(raiz * m, i * .12, 2.2, .12); });
+      golpe(49, 0, .5, .12);
+    },
+    latido:   function () { golpe(60, 0, .26, .34); golpe(52, .30, .32, .28); }
+  };
+})(window.App = window.App || {});

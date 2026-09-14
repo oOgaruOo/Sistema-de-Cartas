@@ -1,0 +1,65 @@
+/* ============================================================
+   admin.css · panel de configuración en línea
+   ============================================================ */
+#scene-letter ~ #scene-admin .scene-inner,
+#scene-admin .scene-inner{ padding:48px 20px; }
+
+.admin-card{
+  width:min(620px,100%); background:var(--paper-light); border-radius:3px;
+  position:relative; padding:clamp(28px,5vw,44px); text-align:center;
+  box-shadow:0 30px 70px -30px rgba(56,32,16,.45), 0 2px 6px rgba(56,32,16,.12);
+}
+.admin-card::after{
+  content:''; position:absolute; inset:10px; pointer-events:none;
+  border:1px solid rgba(55,40,28,.16); border-radius:2px;
+}
+.admin-title{ font-style:italic; font-weight:600; font-size:clamp(30px,6vw,44px); margin:18px 0 8px; }
+.admin-sub{ font-style:italic; color:var(--ink-soft); font-size:clamp(15px,2.2vw,17.5px); line-height:1.6; margin:0 auto 26px; max-width:460px; overflow-wrap:break-word; }
+
+.admin-form{ text-align:left; }
+.admin-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px 28px; }
+.admin-form .field label{
+  display:block; text-transform:uppercase; letter-spacing:.26em;
+  font-size:10.5px; color:var(--ink-soft); font-weight:600; margin-bottom:4px;
+}
+.admin-form .field input{
+  width:100%; background:transparent; border:none; border-bottom:1px solid var(--line);
+  font-family:'Caveat',cursive; font-size:24px; color:var(--ink);
+  padding:4px 2px 7px; border-radius:0; transition:border-color .3s ease;
+}
+.admin-form .field input::placeholder{ font-style:italic; color:rgba(130,112,90,.55); font-size:20px; }
+.admin-form .field input:focus{ border-color:var(--crimson); outline:none; }
+.admin-form .field{ margin-bottom:18px; }
+.admin-note{ font-size:13px; font-style:italic; color:var(--ink-soft); margin-top:5px; }
+#adminGuardar{ margin-top:8px; }
+
+.admin-msg{ font-style:italic; font-size:15px; min-height:1.5em; margin-top:16px; line-height:1.5; color:var(--ink-soft); }
+.admin-msg.error{ color:var(--crimson); }
+.admin-msg.exito{ color:#3e6b3a; }
+
+.admin-links{ text-align:left; margin-top:22px; }
+.admin-link{ border:1px solid var(--line); border-radius:3px; padding:14px 16px; margin-bottom:12px; background:rgba(255,252,244,.6); }
+.admin-link-t{ font-weight:600; font-style:italic; font-size:16.5px; margin-bottom:8px; }
+.admin-link code{
+  display:block; font-family:ui-monospace,Consolas,monospace; font-size:12px;
+  background:rgba(55,40,28,.06); border-radius:2px; padding:8px 10px;
+  word-break:break-all; line-height:1.5; margin-bottom:10px;
+}
+.admin-link-btns{ display:flex; gap:8px; flex-wrap:wrap; }
+.admin-recordar{ font-style:italic; font-size:14.5px; color:var(--ink-soft); line-height:1.6; margin:14px 2px; }
+.admin-recordar b{ color:var(--crimson); font-style:normal; }
+
+@media (max-width:560px){
+  .admin-grid{ grid-template-columns:1fr; gap:0; }
+}
+
+/* --- Resguardo: área de texto del editor (duplicado defensivo
+       de landing.css, por si esa hoja no carga) --- */
+.admin-form textarea{
+  width:100%; min-height:230px; resize:vertical;
+  background:rgba(255,252,244,.55); border:1px solid var(--line); border-radius:3px;
+  font-family:'Cormorant Garamond',Georgia,serif; font-size:18.5px; line-height:1.62;
+  color:var(--ink); padding:14px 16px; transition:border-color .3s ease;
+}
+.admin-form textarea:focus{ border-color:var(--crimson); outline:none; }
+.admin-form textarea::placeholder{ font-style:italic; color:rgba(130,112,90,.55); }

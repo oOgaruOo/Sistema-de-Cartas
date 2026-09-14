@@ -1,0 +1,40 @@
+{
+  "portada": {
+    "eyebrow": "Una carta para pedir perdón",
+    "titulo": "Lo siento<em>,</em>",
+    "subtitulo": "Hay cosas que no caben en un mensaje de texto.<br>Esta merecía ser una <em>carta</em>.",
+    "hint": "Toma un minuto. Vale la pena leerlo despacio."
+  },
+  "sobre": {
+    "eyebrow": "Carta entregada a mano",
+    "hint": "Toca el <em>sello de cera</em> para abrirla"
+  },
+  "carta": {
+    "despedida": "Con todo mi corazón,",
+    "bloques": [
+      { "tipo": "parrafo", "texto": "Llevo días queriendo decirte esto. Lo ensayé mil veces en mi cabeza y, ahora que por fin me decido, ninguna palabra me parece suficiente. Aun así, aquí voy:" },
+      { "tipo": "enfasis", "texto": "Lo siento." },
+      { "tipo": "parrafo", "texto": "Y no lo digo por decir, ni para salir del paso. Lo digo porque me duele lo que te hice, y porque callarlo sería fallarte una segunda vez." },
+      { "tipo": "parrafo", "texto": "Sé que un «perdón» no borra lo que pasó. Si pudiera devolver el tiempo, elegiría mejor. No puedo cambiar aquello; lo único que sí está en mis manos es lo que hago desde hoy." },
+      { "tipo": "parrafo", "texto": "No te pido que olvides ni que finjas que no dolió. Te pido la oportunidad de demostrarte con hechos —no con promesas vacías— que aprendí. Porque tú vales esa clase de esfuerzo." },
+      { "tipo": "parrafo", "texto": "Tómate el tiempo que necesites. Yo aquí estaré, sin prisa y sin reproches. Solo quiero que algo quede claro: me importas, y lamento cada lágrima que te costé." },
+      { "tipo": "firma" }
+    ]
+  },
+  "pregunta": {
+    "titulo": "¿Me perdonas?",
+    "subtitulo": "Puedes responder con la verdad.<br>Las dos respuestas están bien.",
+    "botonSi": "Sí, te perdono",
+    "botonNo": "Todavía me duele"
+  },
+   "finales": {
+    "perdon": {
+      "titulo": "Gracias.",
+      "texto": "No doy este momento por sentado.<br>Lo que pasó me enseñó; <b>lo que viene, lo pienso cuidar contigo.</b>"
+    },
+    "duele": {
+      "titulo": "Gracias por tu honestidad.",
+      "texto": "Nadie puede exigirte sanar con prisa; yo, menos que nadie.<br><b>Tómate tu tiempo.</b> Esta carta seguirá guardada, y yo también aquí seguiré."
+    }
+  }
+}

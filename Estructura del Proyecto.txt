@@ -1,0 +1,102 @@
+disculpa/
+├── index.html                 → estructura de las escenas
+├── README.md
+├── Estructura del Proyecto.txt
+├── css/
+│   ├── base.css               → variables, reset, botones, escenas
+│   ├── portada.css            → escena inicial
+│   ├── sobre.css              → sobre, sello de cera
+│   ├── carta.css              → papel, máquina de escribir
+│   └── finales.css            → pregunta y desenlaces
+├── js/
+│   ├── core/
+│   │   ├── ajax.js            → módulo AJAX (XMLHttpRequest + reintentos)
+│   │   ├── utils.js           → utilidades compartidas
+│   │   └── audio.js           → sonido sintetizado (WebAudio)
+│   ├── ui/
+│   │   ├── dust.js            → motas doradas de fondo
+│   │   ├── effects.js         → lluvia de pétalos
+│   │   └── scenes.js          → gestor de escenas
+│   ├── features/
+│   │   ├── parallax.js        → parallax del sobre
+│   │   ├── typewriter.js      → motor de escritura
+│   │   ├── envelope.js        → apertura del sobre
+│   │   └── letter.js          → flujo de la carta
+│   └── app.js                 → arranque: carga AJAX + cableado
+└── data/
+    ├── config.json            → tiempos, partículas (vía AJAX)
+    └── carta.json             → TODO el contenido textual (vía AJAX)
+
+
+!*--------------- version V0.2 -----------------*!
+
+public_html/  (o la carpeta raíz de tu dominio)
+├── index.html
+├── css/
+│   ├── base.css
+│   ├── portada.css
+│   ├── sobre.css
+│   ├── carta.css
+│   ├── finales.css
+│   ├── cerrojo.css
+│   └── admin.css
+├── js/
+│   ├── core/    (ajax.js · utils.js · audio.js)
+│   ├── ui/      (dust.js · effects.js · scenes.js)
+│   ├── features/(parallax.js · typewriter.js · envelope.js · letter.js · admin.js)
+│   └── app.js
+├── data/
+│   ├── config.json
+│   └── carta.json        ← (privado.json NO lo subas: lo crea el propio panel)
+└── api/
+    ├── cargar.php
+    └── guardar.php
+
+!*--------------- version V0.3 -----------------*!
+
+Sistema_Disculpas/ (Siste...)
+│
+├── api/                      # Lógica del backend (PHP)
+│   ├── cargar.php            # Carga los datos de la disculpa
+│   ├── carta.php             # Genera o procesa la carta
+│   └── guardar.php           # Guarda la configuración o respuesta
+│
+├── css/                      # Hojas de estilo
+│   ├── admin.css             # Estilos del panel de administración
+│   ├── base.css              # Estilos globales y reseteo
+│   ├── carta.css             # Estilos específicos de la carta
+│   ├── cerrojo.css           # Estilos para la pantalla de bloqueo/cerrojo
+│   ├── finales.css           # Estilos para las pantallas de final
+│   ├── landing.css           # Estilos de la página de inicio
+│   ├── portada.css           # Estilos de la portada principal
+│   └── sobre.css             # Estilos para la sección "sobre" o el sobre
+│
+├── data/                     # Almacenamiento de datos (JSON)
+│   ├── carta.json            # Contenido de la carta de disculpa
+│   └── config.json           # Configuración general del sistema
+│
+├── js/                       # Lógica de frontend (JavaScript)
+│   ├── core/                 # Funciones centrales
+│   │   ├── ajax.js           # Peticiones al servidor (API)
+│   │   ├── audio.js          # Control de música y efectos de sonido
+│   │   └── utils.js          # Funciones de utilidad general
+│   │
+│   ├── features/             # Características específicas del sistema
+│   │   ├── admin.js          # Lógica del panel de administración
+│   │   ├── envelope.js       # Animación e interacción del sobre
+│   │   ├── letter.js         # Lógica de la carta (texto, scroll)
+│   │   ├── parallax.js       # Efectos de parallax
+│   │   ├── temas.js          # Gestión de temas visuales
+│   │   └── typewriter.js     # Efecto máquina de escribir para el texto
+│   │
+│   ├── ui/                   # Efectos visuales y de interfaz
+│   │   ├── dust.js           # Efecto de partículas (polvo)
+│   │   ├── effects.js        # Efectos visuales varios
+│   │   └── scenes.js         # Manejo de escenas o transiciones
+│   │
+│   └── app.js                # Archivo principal de inicialización
+│
+├── Estructura del Pr...      # Documento con la estructura del proyecto
+├── generar-clave.zip         # Recurso comprimido (¿Generador de claves?)
+├── index.html                # Página principal del sistema
+└── README.md                 # Documentación del proyecto
